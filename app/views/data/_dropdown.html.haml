@@ -1,0 +1,11 @@
+%li.nav-item.dropdown.print-hide
+  %a.nav-link.dropdown-toggle{ 'data-bs-toggle': "dropdown", href: "#", aria_expanded: "false", role: "button" }
+    %i.bi.bi-database
+    %span.d-sm-none= t 'navbar.data'
+  %ul.dropdown-menu.dropdown-menu-end
+    - data_records.each do |klass, locale_string|
+      %li
+        - if policy(klass).index?
+          = link_to data_path_for(klass, :index), class: "dropdown-item" do
+            %i.bi{ class: klass.bi_icon }
+            = t locale_string

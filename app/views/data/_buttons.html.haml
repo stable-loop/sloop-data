@@ -1,0 +1,12 @@
+- if !action?(:index) && policy(record.class).index?
+  = link_to data_path_for(record.class, :index), class: 'btn btn-info btn-sm me-1', title: t('actions.index') do
+    %i.bi.bi-list-ol
+- if !action?(:new) && !record.new_record?
+  - if !action?(:show) && policy(record).show?
+    = link_to data_path_for(record), class: 'btn btn-info btn-sm me-1', title: t('actions.show') do
+      \##{record.id}
+  - if !action?(:edit) && policy(record).edit?
+    = link_to data_path_for(record, :edit), class: 'btn btn-primary btn-sm me-1', title: t('actions.edit') do
+      %i.bi.bi-pencil-square
+- if File.exist?("app/views/#{params[:controller]}/_extra_buttons.html.haml")
+  = render "#{params[:controller]}/extra_buttons", record:

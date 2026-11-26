@@ -1,0 +1,20 @@
+- content_for :title, list.model.name.humanize.pluralize
+
+%h1
+  - if policy(list.model).new?
+    = link_to data_path_for(list.model, :new), class: 'btn btn-primary btn-sm me-1' do
+      %i.bi.bi-plus-lg
+  = yield(:title)
+
+- if list.any?
+  - headers = policy(record_class).headers.map(&:to_s)
+  %table.table{ id: list.model.name.underscore.pluralize }
+    %thead
+      %th
+      - headers.each do |header|
+        %th= t "#{list.model.name.underscore}.attributes.#{header}"
+    %tbody
+      = render partial: 'data/record', collection: @records, as: :record, locals: { headers: }
+  != @pagy.series_nav(:bootstrap) if @pagy.last > 1
+- else
+  %p= t 'actions.no_records'

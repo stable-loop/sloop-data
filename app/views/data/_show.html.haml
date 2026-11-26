@@ -1,0 +1,14 @@
+- content_for :description, "#{record.class.name.humanize}: #{record}"
+%h1
+  = render 'data/buttons', record:
+  = yield :title
+
+%table
+  - record.attributes.each do |attribute, value|
+    - next unless only.include?(attribute)
+    - next if record.send(attribute).blank?
+    %tr
+      %td.align-top.fw-bold #{attribute.to_s.humanize}:
+      %td= show_value(attribute, value)
+  - if File.exist?("app/views/#{params[:controller]}/_show_extra.html.haml")
+    = render "#{params[:controller]}/show_extra", record:

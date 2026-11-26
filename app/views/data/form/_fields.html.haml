@@ -1,0 +1,46 @@
+- record.class.columns.each do |column|
+  - next if column.name.in? %w[id created_at updated_at]
+  - next if defined?(except) && column.name.in?(except)
+  - next unless column.name.to_sym.in?(policy(record).permitted_attributes)
+
+  .field
+    - if column.type == :boolean
+      = f.label column.name, class: 'fw-bold'
+      = f.check_box column.name, class: 'form-check-input', id: column.name, placeholder: column.name
+    - elsif column.type == :date
+      = f.label column.name, class: 'fw-bold'
+      = f.date_field column.name, class: 'form-control', id: column.name, placeholder: column.name.humanize
+    - elsif column.name == 'color'
+      = f.label column.name, class: 'fw-bold'
+      = f.color_field column.name, class: 'form-control form-control-color', id: column.name, placeholder: column.name.humanize
+    - elsif column.name == 'type'
+      = f.label column.name, class: 'fw-bold'
+      = f.select column.name, options_for_select(subclasses_of(record.class.base_class), record.send(column.name)),
+                 { prompt: "Select #{column.name.humanize}" },
+                 { class: 'form-select', id: column.name }
+    - elsif column.name == 'code'
+      = f.label column.name, class: 'fw-bold'
+      = f.text_area column.name, data: { controller: 'codemirror' }, class: 'form-control', id: column.name, placeholder: column.name.humanize
+    - elsif column.type == :text
+      = f.label column.name, class: 'fw-bold'
+      = f.text_area column.name, value: record.send(column.name), class: 'form-control', id: column.name, placeholder: column.name.humanize, rows: 5
+    - elsif column.name.ends_with?("_id")
+      - dependant = column.name.gsub('_id', '')
+      - reflection = record.class.reflect_on_association(dependant)
+      - optional = reflection.options[:optional]
+      - options = policy_scope(reflection.class_name.constantize).map { |i| [i.name, i.id] }
+      = f.label dependant, class: 'fw-bold'
+      = f.select column.name, options_for_select(options, record.send(column.name)),
+                 { prompt: "Select #{dependant}", include_blank: optional } ,
+                 { class: 'form-select', id: dependant, required: !optional }
+    - elsif record.class.respond_to?(:defined_enums) && record.class.defined_enums.key?(column.name)
+      - enum_keys = record.class.defined_enums[column.name].keys
+      = f.label column.name, class: 'fw-bold'
+      = f.select column.name,
+                 options_for_select(enum_keys.map { |k| [k.humanize, k] }, record.send(column.name)),
+                 { prompt: "Select #{column.name.humanize}" },
+                 { class: 'form-select', id: column.name }
+    - else
+      = f.label column.name, class: 'fw-bold'
+      = f.send form_field(column.type), column.name, class: 'form-control', id: column.name, placeholder: column.name.humanize
+    .small.text-danger= record.errors[column.name].join(', ')

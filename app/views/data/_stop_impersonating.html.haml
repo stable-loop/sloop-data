@@ -1,0 +1,5 @@
+- if current_user != true_user
+  %li.nav-item.d-print-none
+    = link_to stop_impersonating_users_path, class: "btn btn-outline-danger", title: t('actions.stop_impersonating') do
+      %i.bi.bi-person-x-fill
+      %span.small= current_user.name

@@ -1,0 +1,18 @@
+%h1
+  = render 'data/buttons', record:
+  = yield(:description)
+- only_fields = defined?(only) ? only : record.attribute_names
+- url = record.new_record? ? data_path_for(record.class, :create) : data_path_for(record)
+= form_with model: record, url:, id: "#{record.class.name.underscore}_form" do |f|
+  = render 'data/form/fields', f: f, record:, except: %w[health resources], only: only_fields
+  - record.class.reflect_on_all_attachments.map(&:name).each do |attachment|
+    = render 'data/form/components/image_field', f:, record:, attachment:
+  - if File.exist?("app/views/#{params[:controller]}/_extra_fields.html.haml")
+    = render "#{params[:controller]}/extra_fields", f:, record:
+  .actions
+    = f.submit t('actions.save'), class: 'btn btn-primary mt-2'
+    - if record.persisted? && policy(record).destroy?
+      = link_to data_path_for(record), method: :delete, data: { turbo_method: :delete, turbo_confirm: t('actions.ask_confirmation') },
+                            class: 'btn btn-danger mt-2 ms-2', title: t('actions.delete') do
+        %i.bi.bi-x-lg
+        = t('actions.delete')
