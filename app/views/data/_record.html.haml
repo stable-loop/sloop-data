@@ -7,7 +7,7 @@
     - value = record.public_send(header) unless attributes.key?(attribute) # Model method
     %td
       - text = show_value(attribute, value)
-      - if text.is_a?(String) && text.length > max_index_cell_length
+      - if text.is_a?(String) && !text.html_safe? && text.length > max_index_cell_length
         %span{ title: text }= truncate(text, length: max_index_cell_length)
       - else
         = text
