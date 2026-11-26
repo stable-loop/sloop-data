@@ -2,6 +2,15 @@
 
 A Rails gem providing a base controller, helpers, and reusable Haml views for CRUD resource management.
 
+## Contents
+
+- [Installation from GitHub](#installation-from-github)
+- [Creating a basic CRUD resource](#creating-a-basic-crud-resource)
+- [Adding the data menu](#adding-the-data-menu)
+- [Extending the templates with partials](#extending-the-templates-with-partials)
+- [Replacing the standard views](#replacing-the-standard-views)
+- [License](#license)
+
 ## Installation from GitHub
 
 Add the gem to your application's `Gemfile`:
@@ -106,3 +115,9 @@ end
 ```
 
 In that case, place the templates at `app/views/data/widgets/show.html.haml` and `app/views/data/widgets/index.html.haml`, respectively.
+
+## License
+
+Under [MIT License](https://opensource.org/license/MIT)
+
+Copyright (c) 2026 [Stableloop](https://stableloop.dev).
