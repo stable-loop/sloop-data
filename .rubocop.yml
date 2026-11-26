@@ -6,6 +6,7 @@ AllCops:
   NewCops: disable
   Exclude:
     - lib/sloop-pack.rb
+    - app/helpers/data/show_value_helper.rb
     - vendor/**/*
 
 Metrics/BlockLength:
@@ -23,6 +24,10 @@ Style/Documentation:
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
+
+Naming/FileName:
+  Exclude:
+    - lib/sloop-data.rb
 
 RSpec/DescribeClass:
   Exclude:

@@ -35,7 +35,7 @@ module Data
 
     def subclasses_of(klass)
       Rails.application.eager_load!
-      ApplicationRecord.descendants.select { |_| _ < klass }.map(&:name)
+      ApplicationRecord.descendants.select { |descendant| descendant < klass }.map(&:name)
     end
   end
 end
