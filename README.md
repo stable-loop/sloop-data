@@ -9,6 +9,7 @@ A Rails gem providing a base controller, helpers, and reusable Haml views for CR
 - [Installation from GitHub](#installation-from-github)
 - [Creating a basic CRUD resource](#creating-a-basic-crud-resource)
 - [Adding the data menu](#adding-the-data-menu)
+- [Enabling user impersonation in a new app](#enabling-user-impersonation-in-a-new-app)
 - [Extending the templates with partials](#extending-the-templates-with-partials)
 - [Replacing the standard views](#replacing-the-standard-views)
 - [License](#license)
@@ -66,6 +67,69 @@ end
 ```
 
 The model's `bi_icon` class method should return this constant. If the application provides the same fallback as `ApplicationRecord`, models without `BI_ICON` use `bi-table` by default.
+
+## Enabling user impersonation in a new app
+
+`sloop-data` declares `pretender` as a runtime dependency and loads it, so do not add a separate `pretender` entry to the application's `Gemfile`.
+
+Add Pretender's setup to the host application's controller (merge this line into an existing controller rather than replacing it):
+
+```ruby
+# app/controllers/application_controller.rb
+class ApplicationController < ActionController::Base
+  impersonates :user
+end
+```
+
+Add routes for starting and stopping impersonation:
+
+```ruby
+# config/routes.rb
+resources :users, only: [:index] do
+  get :impersonate, on: :member
+  get :stop_impersonating, on: :collection
+end
+```
+
+Implement the actions in the host application's `UsersController`. Authenticate the caller and authorize impersonation before switching users:
+
+```ruby
+# app/controllers/users_controller.rb
+class UsersController < ApplicationController
+  before_action :authenticate_user!
+
+  def impersonate
+    target_user = User.find(params[:id])
+    authorize target_user
+    impersonate_user(target_user)
+    redirect_to root_path
+  end
+
+  def stop_impersonating
+    stop_impersonating_user
+    redirect_to root_path
+  end
+end
+```
+
+Make the action admin-only in the Pundit policy. `authorize target_user` uses the `impersonate?` query:
+
+```ruby
+# app/policies/user_policy.rb
+class UserPolicy < ApplicationPolicy
+  def impersonate? = user.admin?
+end
+```
+
+The gem provides `data/users/_extra_buttons.html.haml`, which adds an impersonation link to the standard user record buttons when the data users view is used. To show the stop-impersonating button in the navigation, render the provided partial inside a navigation list:
+
+```haml
+%ul.navbar-nav
+  - if user_signed_in?
+    = render "data/stop_impersonating"
+```
+
+Pretender also provides `true_user` for the authenticated user while `current_user` refers to the impersonated user. The host app remains responsible for its authentication, routes, controller actions, and authorization policy.
 
 ## Extending the templates with partials
 

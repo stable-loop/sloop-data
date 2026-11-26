@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Data
+class Data
   class ApplicationController < ApplicationController
     extend ActiveSupport::Concern
     include Data::DataHelper

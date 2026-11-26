@@ -8,5 +8,5 @@
   - if !action?(:edit) && policy(record).edit?
     = link_to data_path_for(record, :edit), class: 'btn btn-primary btn-sm me-1', title: t('actions.edit') do
       %i.bi.bi-pencil-square
-- if File.exist?("app/views/#{params[:controller]}/_extra_buttons.html.haml")
+- if lookup_context.exists?("#{params[:controller]}/extra_buttons", [], true)
   = render "#{params[:controller]}/extra_buttons", record:

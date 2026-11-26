@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Data
+class Data
   module ShowValueHelper
     def max_index_cell_length = 50
 

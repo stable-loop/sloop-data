@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Data
+class Data
   module DataHelper
     def action?(action_name) = params[:action] == action_name.to_s
 
