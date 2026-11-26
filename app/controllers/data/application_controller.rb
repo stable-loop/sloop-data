@@ -8,6 +8,7 @@ class Data
     include Pagy::Method
 
     before_action :authenticate_user!
+    before_action :authorize_record_class, only: %i[index new create]
     before_action :set_records, only: %i[index]
     before_action :set_record, only: %i[show edit update destroy]
     helper_method :record_class, :bi_icon
@@ -73,6 +74,10 @@ class Data
     def set_records
       @records = policy_scope(record_class).order("id desc")
       @pagy, @records = pagy(@records)
+    end
+
+    def authorize_record_class
+      authorize record_class
     end
 
     def set_record

@@ -47,7 +47,7 @@ class Data::WidgetsController < Data::ApplicationController
 end
 ```
 
-The controller name determines the model: `WidgetsController` uses `Widget`. The application must provide the model and its Pundit policy. The base controller uses `policy_scope` to list records, authorizes individual records, and gets `permitted_attributes` from the policy for create and update. The views also use `headers` for index columns and the `index?`, `new?`, `show?`, `edit?`, and `destroy?` permissions to decide which actions to display.
+The controller name determines the model: `WidgetsController` uses `Widget`. The application must provide the model and its Pundit policy. The base controller authorizes the model class for `index`, `new`, and `create`, uses `policy_scope` to list records, authorizes individual records, and gets `permitted_attributes` from the policy for create and update. The views also use `headers` for index columns and the `index?`, `new?`, `show?`, `edit?`, and `destroy?` permissions to decide which actions to display.
 
 ## Adding the data menu
 
