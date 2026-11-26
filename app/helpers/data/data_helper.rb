@@ -20,6 +20,11 @@ class Data
       end
     end
 
+    def data_icon_for(klass)
+      controller_class = "Data::#{klass.name.pluralize}Controller".safe_constantize
+      controller_class.new.bi_icon
+    end
+
     def data_records
       data_controller_files = Dir.glob(Rails.root.join("app/controllers/data/*_controller.rb"))
       data_controller_files.map do |file|

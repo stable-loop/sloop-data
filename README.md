@@ -58,15 +58,18 @@ The controller name determines the model: `WidgetsController` uses `Widget`. The
   = render "data/dropdown"
 ```
 
-The partial checks the model's policy before showing a link, uses `bi_icon` for the icon, and looks up the `model.models` translation key (for example, `widget.widgets`). Set the Bootstrap Icons class in the model's `BI_ICON` constant (without repeating the `bi` class):
+The partial checks the model's policy before showing a link, calls `data_icon_for(model_class)` in `Data::DataHelper` for the Bootstrap Icons class, and looks up the `model.models` translation key (for example, `widget.widgets`). The helper calls `bi_icon` on the matching data controller, which reads that controller's `BI_ICON` constant and falls back to `bi-table` if it is missing.
+
+Define `BI_ICON` in each resource controller. `Data::ApplicationController` provides `bi_icon` and exposes it to views with `helper_method :bi_icon`:
 
 ```ruby
-class Widget < ApplicationRecord
+# app/controllers/data/widgets_controller.rb
+class Data::WidgetsController < Data::ApplicationController
   BI_ICON = "bi-box"
 end
 ```
 
-The model's `bi_icon` class method should return this constant. If the application provides the same fallback as `ApplicationRecord`, models without `BI_ICON` use `bi-table` by default.
+Use the Bootstrap Icons class without adding the separate `bi` class.
 
 ## Enabling user impersonation in a new app
 

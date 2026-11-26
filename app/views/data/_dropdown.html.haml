@@ -7,5 +7,5 @@
       %li
         - if policy(klass).index?
           = link_to data_path_for(klass, :index), class: "dropdown-item" do
-            %i.bi{ class: klass.bi_icon }
+            %i.bi{ class: data_icon_for(klass) }
             = t locale_string

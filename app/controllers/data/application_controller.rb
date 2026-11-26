@@ -10,9 +10,15 @@ class Data
     before_action :authenticate_user!
     before_action :set_records, only: %i[index]
     before_action :set_record, only: %i[show edit update destroy]
-    helper_method :record_class
+    helper_method :record_class, :bi_icon
 
     def record_class = controller_name.classify.constantize
+
+    def bi_icon
+      return "bi-table" unless self.class.const_defined?(:BI_ICON, false)
+
+      self.class.const_get(:BI_ICON, false)
+    end
 
     # GET /records
     def index
