@@ -2,6 +2,8 @@
 
 A Rails gem providing a base controller, helpers, and reusable Haml views for CRUD resource management.
 
+[![CI](https://github.com/stable-loop/sloop-data/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/stable-loop/sloop-data/actions/workflows/ci.yml)
+
 ## Contents
 
 - [Installation from GitHub](#installation-from-github)
